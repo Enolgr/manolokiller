@@ -6,34 +6,27 @@ let gameOverModal = document.getElementById("gameOverModal");
 let finalScore = document.getElementById("finalScore");
 let restartButton = document.getElementById("restartButton");
 
-let speedX = 3 + Math.random() * 5; // Velocidad inicial en X (5-10)
-let speedY = 3 + Math.random() * 5; // Velocidad inicial en Y (5-10)
+// Velocidades (pueden ser aleatorias o fijas según lo que necesites)
+let speedX = 3 + Math.random() * 5; // Ejemplo: velocidad inicial en X
+let speedY = 3 + Math.random() * 5; // Ejemplo: velocidad inicial en Y
 
 let posX = Math.random() * (mapa.clientWidth - manolo.clientWidth);
 let posY = Math.random() * (mapa.clientHeight - manolo.clientHeight);
 
-let count = 0; // Contador de clics en Manolo
-let balasRestantes = 12; // Número inicial de balas
+let count = 0;             // Puntuación (clics en Manolo)
+let balasRestantes = 12;    // Número inicial de balas
 
-let isGameOver = false; // Controla si el juego ha terminado
-let animationFrame; // Para detener la animación
+let isGameOver = false;    // Bandera para finalizar el juego
+let animationFrame;        // Referencia para detener la animación
 
 manolo.style.position = "absolute";
 
-// Función para generar las balas dinámicamente
-function generarBalas() {
-    balasContainer.innerHTML = "";
-    for (let i = 0; i < balasRestantes; i++) {
-        let bala = document.createElement("img");
-        bala.src = "./img/bala.png";
-        bala.alt = "Bala";
-        balasContainer.appendChild(bala);
-    }
-}
+// Guarda el HTML inicial de las balas para restaurarlo al reiniciar
+const defaultBalasHTML = balasContainer.innerHTML;
 
-// Mueve a Manolo dentro de la caja
+// Función para mover a Manolo dentro de la "mapa"
 function moveManolo() {
-    if (isGameOver) return; // Detener el movimiento si el juego termina
+    if (isGameOver) return; // Si el juego terminó, se detiene el movimiento
 
     posX += speedX;
     posY += speedY;
@@ -41,7 +34,7 @@ function moveManolo() {
     let maxWidth = mapa.clientWidth - manolo.clientWidth;
     let maxHeight = mapa.clientHeight - manolo.clientHeight;
 
-    // Verifica colisión con bordes laterales
+    // Colisión con los bordes laterales
     if (posX <= 0) {
         posX = 0;
         speedX *= -1;
@@ -50,7 +43,7 @@ function moveManolo() {
         speedX *= -1;
     }
 
-    // Verifica colisión con bordes superior/inferior
+    // Colisión con los bordes superior/inferior
     if (posY <= 0) {
         posY = 0;
         speedY *= -1;
@@ -69,7 +62,7 @@ moveManolo();
 
 // Evento de clic en Manolo
 manolo.addEventListener("click", function (event) {
-    event.stopPropagation(); // Evita que el click en Manolo cuente como un click en el fondo
+    event.stopPropagation(); // Evita que el clic se propague al fondo
 
     if (balasRestantes > 0) {
         count++;
@@ -79,27 +72,30 @@ manolo.addEventListener("click", function (event) {
         speedX *= 1.1;
         speedY *= 1.1;
 
-        // Forzar reinicio del filtro para que siempre se vea el efecto
-        document.body.style.filter = "none"; // Resetea antes de aplicar el efecto
-        void document.body.offsetWidth; // Forzar un reflow del navegador
+        // Efecto de pantalla invertida (negativo)
+        document.body.style.filter = "none"; // Reinicia el filtro
+        void document.body.offsetWidth; // Fuerza reflow para que se aplique el cambio
         document.body.style.filter = "invert(1)";
-
         setTimeout(() => {
-            document.body.style.filter = "none"; // Vuelve a su estado normal
-        }, 50); // 0.02s = 20ms
+            document.body.style.filter = "none"; // Vuelve al estado normal
+        }, 50);
     }
 });
-;
 
-// Evento de clic en cualquier parte de la pantalla para gastar balas
+// Evento de clic en cualquier parte de la pantalla para gastar una bala
 document.body.addEventListener("click", function () {
     if (balasRestantes > 0) {
         balasRestantes--;
-        generarBalas();
+
+        // Remueve la primera bala (primer <img> en el contenedor)
+        let primeraBala = balasContainer.querySelector("img");
+        if (primeraBala) {
+            primeraBala.remove();
+        }
     }
 
     if (balasRestantes === 0) {
-        endGame(); // Llama a la función para finalizar el juego
+        endGame(); // Finaliza el juego si se acaban las balas
     }
 });
 
@@ -108,32 +104,30 @@ function endGame() {
     isGameOver = true; // Detiene el movimiento de Manolo
     cancelAnimationFrame(animationFrame); // Detiene la animación
 
-    // Mostrar el modal con el puntaje
+    // Muestra el modal con el puntaje final
     finalScore.textContent = count;
     gameOverModal.style.display = "flex";
 }
 
 // Evento para reiniciar el juego
 restartButton.addEventListener("click", function () {
-    // Reiniciar variables
+    // Reinicia las variables del juego
     count = 0;
     balasRestantes = 12;
     isGameOver = false;
 
-    // Reiniciar UI
+    // Actualiza la UI
     contador.textContent = count;
-    generarBalas();
+    // Restaura las balas usando el HTML inicial guardado
+    balasContainer.innerHTML = defaultBalasHTML;
     gameOverModal.style.display = "none";
 
-    // Reiniciar posición y velocidad de Manolo
+    // Reinicia posición y velocidad de Manolo
     posX = Math.random() * (mapa.clientWidth - manolo.clientWidth);
     posY = Math.random() * (mapa.clientHeight - manolo.clientHeight);
-    speedX = 5 + Math.random() * 5;
-    speedY = 5 + Math.random() * 5;
+    speedX = 3 + Math.random() * 5;
+    speedY = 3 + Math.random() * 5;
 
-    // Reiniciar animación
+    // Reinicia la animación
     moveManolo();
 });
-
-// Generar las balas al inicio
-generarBalas();
