@@ -28,21 +28,25 @@ main{
     height: 90vh;
 }
 
-.balas{
-padding: 1rem;
-height: 10vh;
-width: fit-content;
-display: flex;
-flex-direction: flex;
-align-items: center;
-justify-content: center;
-gap: 1rem;
-flex-wrap: wrap;
+.balas {
+    padding: 1rem;
+    height: auto; /* Permitir que se ajuste dinámicamente */
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap; /* Evita que las balas se muevan a otra línea */
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    overflow-x: auto; /* Permite desplazamiento horizontal si no caben */
+    white-space: nowrap; /* Mantiene todo en una sola línea */
 }
 
-.balas img{
-    height: 100%;
+.balas img {
+    height: 5vh; /* Reducir tamaño en móvil */
+    width: auto; /* Mantener proporciones */
+    max-height: 50px; /* Evitar que crezcan demasiado en pantallas grandes */
 }
+
 
 #manolo{
     background-image: url("./img/favicon.png");
