@@ -57,50 +57,42 @@ main{
     background-position: center;
     background-size: cover;
 }
-.info{
+
+.info {
     width: 100%;
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.contador{
-    padding: 1rem;
-}
-
-/* Estilos para el modal */
-.modal {
-    display: none; /* Oculto por defecto */
-    position: fixed;
-    top: 0;
+    flex-wrap: nowrap; /* No permite que se vayan a otra línea */
+    position: absolute;
+    bottom: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    justify-content: center;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo semitransparente */
+}
+
+.balas {
+    height: 7vh; /* Ajuste de altura */
+    display: flex;
+    flex-wrap: nowrap; /* Mantener todo en una línea */
     align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    overflow-x: auto; /* Permite desplazamiento horizontal si no caben */
+    white-space: nowrap; /* Evita que las balas se dividan en varias líneas */
+    max-width: 80%; /* Evitar que ocupen todo el espacio */
 }
 
-.modal-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
+.balas img {
+    height: 5vh; /* Tamaño reducido en móviles */
+    width: auto;
+    max-height: 40px; /* Ajuste para pantallas más grandes */
+}
+
+.contador {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0 1rem;
     text-align: center;
-}
-
-.modal-content button {
-    padding: 0.5rem 1rem;
-    margin-top: 1rem;
-    border: none;
-    background: blue;
-    color: white;
-    cursor: pointer;
-    font-size: 1rem;
-    border-radius: 5px;
-}
-
-.modal-content button:hover {
-    background: darkblue;
+    min-width: 20%;
 }
