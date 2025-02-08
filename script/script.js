@@ -6,8 +6,8 @@ let gameOverModal = document.getElementById("gameOverModal");
 let finalScore = document.getElementById("finalScore");
 let restartButton = document.getElementById("restartButton");
 
-let speedX = 5 + Math.random() * 5; // Velocidad inicial en X (5-10)
-let speedY = 5 + Math.random() * 5; // Velocidad inicial en Y (5-10)
+let speedX = 3 + Math.random() * 5; // Velocidad inicial en X (5-10)
+let speedY = 3 + Math.random() * 5; // Velocidad inicial en Y (5-10)
 
 let posX = Math.random() * (mapa.clientWidth - manolo.clientWidth);
 let posY = Math.random() * (mapa.clientHeight - manolo.clientHeight);
@@ -79,13 +79,17 @@ manolo.addEventListener("click", function (event) {
         speedX *= 1.1;
         speedY *= 1.1;
 
-        // Efecto de pantalla invertida
+        // Forzar reinicio del filtro para que siempre se vea el efecto
+        document.body.style.filter = "none"; // Resetea antes de aplicar el efecto
+        void document.body.offsetWidth; // Forzar un reflow del navegador
         document.body.style.filter = "invert(1)";
+
         setTimeout(() => {
-            document.body.style.filter = "invert(0)";
-        }, 20); // 0.02s = 20ms
+            document.body.style.filter = "none"; // Vuelve a su estado normal
+        }, 50); // 0.02s = 20ms
     }
 });
+;
 
 // Evento de clic en cualquier parte de la pantalla para gastar balas
 document.body.addEventListener("click", function () {
