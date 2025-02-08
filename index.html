@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main class="juego">
+      <div class="mapa">
+        <div id="manolo"></div>
+      </div>
+
+      <div class="info">
+      <div class="balas">
+        <img src="./img/bala.png" alt="" />
+        <img src="./img/bala.png" alt="" /><img
+          src="./img/bala.png"
+          alt=""
+        /><img src="./img/bala.png" alt="" /><img
+          src="./img/bala.png"
+          alt=""
+        /><img src="./img/bala.png" alt="" /><img
+          src="./img/bala.png"
+          alt=""
+        /><img src="./img/bala.png" alt="" /><img
+          src="./img/bala.png"
+          alt=""
+        /><img src="./img/bala.png" alt="" /><img
+          src="./img/bala.png"
+          alt=""
+        /><img src="./img/bala.png" alt="" />
+      </div>
+      <div class="contador"><h2 id="numero">0</h2></div>
+    </div>
+
+        <!-- Modal de fin del juego -->
+    <div id="gameOverModal" class="modal">
+        <div class="modal-content">
+        <h2>Juego Terminado</h2>
+        <p>Tu puntuación: <span id="finalScore">0</span></p>
+        <button id="restartButton">Reiniciar Juego</button>
+        </div>
+    </div>
+
+    </main>
+    <script src="./script/script.js"></script>
+  </body>
+</html>
+
+

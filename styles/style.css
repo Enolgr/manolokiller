@@ -1,0 +1,101 @@
+
+* {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    background-color: #fff;
+margin: 0;
+padding: 0;
+  }
+
+  
+  h2,
+  h3,
+  h4,
+  h5,
+  p {
+    font-family: DM Sans, Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+main{
+    height: 100vh;
+}
+
+.mapa{
+    height: 90vh;
+}
+
+.balas{
+padding: 1rem;
+height: 10vh;
+width: fit-content;
+display: flex;
+flex-direction: flex;
+align-items: center;
+justify-content: center;
+gap: 1rem;
+}
+
+.balas img{
+    height: 100%;
+}
+
+#manolo{
+    background-image: url("./img/favicon.png");
+    background-color: blue;
+    height: 10vh;
+    width: 10vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.info{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.contador{
+    padding: 1rem;
+}
+
+/* Estilos para el modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.modal-content button {
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    border: none;
+    background: blue;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.modal-content button:hover {
+    background: darkblue;
+}
