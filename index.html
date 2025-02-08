@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://api.fontshare.com/v2/css?f[]=tanker@400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles/style.css" />
     <title>Juego Manolo</title>
   </head>
@@ -29,6 +30,14 @@
         </div>
         <div class="contador">
           <h2 id="numero">0</h2>
+        </div>
+      </div>
+
+      <!-- Modal de inicio (visible la primera vez) -->
+      <div id="firstTimeModal" class="modal" style="display: flex;">
+        <div class="modal-content">
+          <h2>Mata a Manolo, por infiel e hijo de puta</h2>
+          <button id="startGameButton">Empezar Juego</button>
         </div>
       </div>
 

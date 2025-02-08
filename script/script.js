@@ -6,134 +6,144 @@ let gameOverModal = document.getElementById("gameOverModal");
 let finalScore = document.getElementById("finalScore");
 let restartButton = document.getElementById("restartButton");
 
-let speedX = 3 + Math.random() * 5; // Velocidad inicial en X (5-10)
-let speedY = 3 + Math.random() * 5; // Velocidad inicial en Y (5-10)
+// Nuevos elementos para el modal de inicio
+let firstTimeModal = document.getElementById("firstTimeModal");
+let startGameButton = document.getElementById("startGameButton");
+
+// Velocidades iniciales (se mantienen aleatorias; si deseas fijas, asigna valores constantes)
+let speedX = 3 + Math.random() * 5;
+let speedY = 3 + Math.random() * 5;
 
 let posX = Math.random() * (mapa.clientWidth - manolo.clientWidth);
 let posY = Math.random() * (mapa.clientHeight - manolo.clientHeight);
 
-let count = 0; // Contador de clics en Manolo
-let balasRestantes = 12; // Número inicial de balas
+let count = 0;            // Puntuación (número de golpes a Manolo)
+let balasRestantes = 12;   // Número de balas inicial
 
-let isGameOver = false; // Controla si el juego ha terminado
-let animationFrame; // Para detener la animación
+let isGameOver = false;   // Indica si el juego ha terminado
+let animationFrame;       // Referencia para la animación
 
 manolo.style.position = "absolute";
 
-// Función para generar las balas dinámicamente
-function generarBalas() {
-    balasContainer.innerHTML = "";
-    for (let i = 0; i < balasRestantes; i++) {
-        let bala = document.createElement("img");
-        bala.src = "./img/bala.png";
-        bala.alt = "Bala";
-        balasContainer.appendChild(bala);
-    }
-}
-
-// Mueve a Manolo dentro de la caja
+// Función para mover a Manolo dentro del contenedor "mapa"
 function moveManolo() {
-    if (isGameOver) return; // Detener el movimiento si el juego termina
+  if (isGameOver) return; // Se detiene el movimiento si el juego terminó
 
-    posX += speedX;
-    posY += speedY;
+  posX += speedX;
+  posY += speedY;
 
-    let maxWidth = mapa.clientWidth - manolo.clientWidth;
-    let maxHeight = mapa.clientHeight - manolo.clientHeight;
+  let maxWidth = mapa.clientWidth - manolo.clientWidth;
+  let maxHeight = mapa.clientHeight - manolo.clientHeight;
 
-    // Verifica colisión con bordes laterales
-    if (posX <= 0) {
-        posX = 0;
-        speedX *= -1;
-    } else if (posX >= maxWidth) {
-        posX = maxWidth;
-        speedX *= -1;
-    }
+  // Colisión con los bordes laterales
+  if (posX <= 0) {
+    posX = 0;
+    speedX *= -1;
+  } else if (posX >= maxWidth) {
+    posX = maxWidth;
+    speedX *= -1;
+  }
 
-    // Verifica colisión con bordes superior/inferior
-    if (posY <= 0) {
-        posY = 0;
-        speedY *= -1;
-    } else if (posY >= maxHeight) {
-        posY = maxHeight;
-        speedY *= -1;
-    }
+  // Colisión con los bordes superior/inferior
+  if (posY <= 0) {
+    posY = 0;
+    speedY *= -1;
+  } else if (posY >= maxHeight) {
+    posY = maxHeight;
+    speedY *= -1;
+  }
 
-    manolo.style.transform = `translate(${posX}px, ${posY}px)`;
-
-    animationFrame = requestAnimationFrame(moveManolo);
+  manolo.style.transform = `translate(${posX}px, ${posY}px)`;
+  animationFrame = requestAnimationFrame(moveManolo);
 }
 
-// Inicia el movimiento de Manolo
-moveManolo();
+// NOTA: No llamamos a moveManolo() inmediatamente; se llamará cuando se presione "Empezar Juego".
 
-// Evento de clic en Manolo
-manolo.addEventListener("click", function (event) {
-    event.stopPropagation(); // Evita que el click en Manolo cuente como un click en el fondo
+// Manejador global de clics en el documento
+document.addEventListener("click", function (event) {
+  // No procesar clics si el juego ya terminó o si el clic fue en alguno de los modales
+  if (isGameOver) return;
+  if (event.target.closest("#gameOverModal") || event.target.closest("#firstTimeModal")) return;
 
-    if (balasRestantes > 0) {
-        count++;
-        contador.textContent = count;
+  // Cada clic gasta una bala (sin importar si se golpea a Manolo o no)
+  if (balasRestantes > 0) {
+    balasRestantes--;
+    let firstBullet = balasContainer.querySelector("img");
+    if (firstBullet) firstBullet.remove();
+  }
 
-        // Aumentar velocidad de Manolo
-        speedX *= 1.1;
-        speedY *= 1.1;
+  // Si el clic se realizó sobre Manolo → ¡Golpe exitoso!
+  if (event.target.id === "manolo") {
+    count++;
+    contador.textContent = count;
 
-        // Forzar reinicio del filtro para que siempre se vea el efecto
-        document.body.style.filter = "none"; // Resetea antes de aplicar el efecto
-        void document.body.offsetWidth; // Forzar un reflow del navegador
-        document.body.style.filter = "invert(1)";
+    // Aumenta la velocidad de Manolo en un 10%
+    speedX *= 1.1;
+    speedY *= 1.1;
 
-        setTimeout(() => {
-            document.body.style.filter = "none"; // Vuelve a su estado normal
-        }, 50); // 0.02s = 20ms
-    }
+    // Efecto de pantalla invertida (negativo) por 50ms
+    document.body.style.filter = "none"; // Reinicia el filtro
+    void document.body.offsetWidth; // Fuerza reflow
+    document.body.style.filter = "invert(1)";
+    setTimeout(() => {
+      document.body.style.filter = "none";
+    }, 50);
+  } else {
+    // Si se falla (clic fuera de Manolo), se muestra la imagen "agujero" en la posición del clic
+    let agujero = document.createElement("img");
+    agujero.src = "./img/agujero.png";
+    agujero.style.position = "absolute";
+    agujero.style.left = event.clientX + "px";
+    agujero.style.top = event.clientY + "px";
+    agujero.style.transform = "translate(-50%, -50%)";
+    agujero.style.width = "300px"; // El doble de grande que antes (ajusta según necesites)
+    document.body.appendChild(agujero);
+    setTimeout(() => {
+      agujero.remove();
+    }, 1000);
+  }
+
+  // Si se han gastado todas las balas, finaliza el juego
+  if (balasRestantes === 0) {
+    endGame();
+  }
 });
-;
 
-// Evento de clic en cualquier parte de la pantalla para gastar balas
-document.body.addEventListener("click", function () {
-    if (balasRestantes > 0) {
-        balasRestantes--;
-        generarBalas();
-    }
-
-    if (balasRestantes === 0) {
-        endGame(); // Llama a la función para finalizar el juego
-    }
-});
-
-// Función para terminar el juego
+// Función para finalizar el juego
 function endGame() {
-    isGameOver = true; // Detiene el movimiento de Manolo
-    cancelAnimationFrame(animationFrame); // Detiene la animación
-
-    // Mostrar el modal con el puntaje
-    finalScore.textContent = count;
-    gameOverModal.style.display = "flex";
+  isGameOver = true; // Detiene el movimiento de Manolo
+  cancelAnimationFrame(animationFrame);
+  finalScore.textContent = count;
+  gameOverModal.style.display = "flex";
 }
 
 // Evento para reiniciar el juego
 restartButton.addEventListener("click", function () {
-    // Reiniciar variables
-    count = 0;
-    balasRestantes = 12;
-    isGameOver = false;
+  // Reiniciar las variables del juego
+  count = 0;
+  balasRestantes = 12;
+  isGameOver = false;
+  contador.textContent = count;
 
-    // Reiniciar UI
-    contador.textContent = count;
-    generarBalas();
-    gameOverModal.style.display = "none";
+  // Restaurar las 12 balas en el HTML
+  let bulletsHTML = "";
+  for (let i = 0; i < 12; i++) {
+    bulletsHTML += `<img src="./img/bala.png" alt="Bala" />`;
+  }
+  balasContainer.innerHTML = bulletsHTML;
+  gameOverModal.style.display = "none";
 
-    // Reiniciar posición y velocidad de Manolo
-    posX = Math.random() * (mapa.clientWidth - manolo.clientWidth);
-    posY = Math.random() * (mapa.clientHeight - manolo.clientHeight);
-    speedX = 5 + Math.random() * 5;
-    speedY = 5 + Math.random() * 5;
+  // Reiniciar posición y velocidad de Manolo
+  posX = Math.random() * (mapa.clientWidth - manolo.clientWidth);
+  posY = Math.random() * (mapa.clientHeight - manolo.clientHeight);
+  speedX = 3 + Math.random() * 5;
+  speedY = 3 + Math.random() * 5;
 
-    // Reiniciar animación
-    moveManolo();
+  moveManolo();
 });
 
-// Generar las balas al inicio
-generarBalas();
+// Evento para empezar el juego (solo la primera vez)
+startGameButton.addEventListener("click", function () {
+  firstTimeModal.style.display = "none";
+  moveManolo();
+});
