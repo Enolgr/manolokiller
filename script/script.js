@@ -10,6 +10,9 @@ let restartButton = document.getElementById("restartButton");
 let firstTimeModal = document.getElementById("firstTimeModal");
 let startGameButton = document.getElementById("startGameButton");
 
+// Crear el objeto de audio para el disparo
+let shotSound = new Audio('sounds/shot.mp3');
+
 // Velocidades iniciales (se mantienen aleatorias; si deseas fijas, asigna valores constantes)
 let speedX = 3 + Math.random() * 5;
 let speedY = 3 + Math.random() * 5;
@@ -67,6 +70,10 @@ document.addEventListener("click", function (event) {
 
   // Cada clic gasta una bala (sin importar si se golpea a Manolo o no)
   if (balasRestantes > 0) {
+    // Reproducir sonido de disparo
+    shotSound.currentTime = 0; // Reinicia el audio para reproducirlo desde el inicio
+    shotSound.play();
+
     balasRestantes--;
     let firstBullet = balasContainer.querySelector("img");
     if (firstBullet) firstBullet.remove();
