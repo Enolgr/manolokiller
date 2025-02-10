@@ -77,6 +77,9 @@ document.addEventListener("click", function (event) {
 
   // Si el clic se realizó sobre Manolo → ¡Golpe exitoso!
   if (event.target.id === "manolo") {
+    // Reproducir sonido de golpe
+    new Audio('sounds/hit.mp3').play();
+
     count++;
     contador.textContent = count;
 
@@ -118,6 +121,9 @@ function endGame() {
   cancelAnimationFrame(animationFrame);
   finalScore.textContent = count;
   gameOverModal.style.display = "flex";
+  
+  // Reproducir sonido de finalización (muerte final)
+  new Audio('sounds/muerte_final.mp3').play();
 }
 
 // Evento para reiniciar el juego
@@ -147,6 +153,9 @@ restartButton.addEventListener("click", function () {
 
 // Evento para empezar el juego (solo la primera vez)
 startGameButton.addEventListener("click", function () {
+  // Reproducir sonido de recarga al empezar el juego
+  new Audio('sounds/recarga.mp3').play();
+  
   firstTimeModal.style.display = "none";
   moveManolo();
 });
