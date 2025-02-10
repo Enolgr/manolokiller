@@ -14,7 +14,7 @@ let startGameButton = document.getElementById("startGameButton");
 let bso = new Audio("sounds/bso.mp3");
 bso.loop = true;             // Reproduce en loop sin pausas
 bso.preload = "auto";        // Fuerza la precarga del audio
-bso.volume = 0.5;            // Se reproduce a la mitad del volumen original
+bso.volume = 0.3;            // Se reproduce a la mitad del volumen original
 bso.load();                  // Inicia la carga del audio
 
 // Velocidades iniciales (aleatorias)
