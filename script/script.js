@@ -10,10 +10,7 @@ let restartButton = document.getElementById("restartButton");
 let firstTimeModal = document.getElementById("firstTimeModal");
 let startGameButton = document.getElementById("startGameButton");
 
-// Crear el objeto de audio para el disparo
-let shotSound = new Audio('sounds/shot.mp3');
-
-// Velocidades iniciales (se mantienen aleatorias; si deseas fijas, asigna valores constantes)
+// Velocidades iniciales (aleatorias; si deseas fijas, asigna valores constantes)
 let speedX = 3 + Math.random() * 5;
 let speedY = 3 + Math.random() * 5;
 
@@ -70,9 +67,8 @@ document.addEventListener("click", function (event) {
 
   // Cada clic gasta una bala (sin importar si se golpea a Manolo o no)
   if (balasRestantes > 0) {
-    // Reproducir sonido de disparo
-    shotSound.currentTime = 0; // Reinicia el audio para reproducirlo desde el inicio
-    shotSound.play();
+    // Reproducir sonido de disparo sin cortar el anterior (se crea un nuevo objeto de Audio)
+    new Audio('sounds/shot.mp3').play();
 
     balasRestantes--;
     let firstBullet = balasContainer.querySelector("img");
@@ -103,7 +99,7 @@ document.addEventListener("click", function (event) {
     agujero.style.left = event.clientX + "px";
     agujero.style.top = event.clientY + "px";
     agujero.style.transform = "translate(-50%, -50%)";
-    agujero.style.width = "300px"; // El doble de grande que antes (ajusta según necesites)
+    agujero.style.width = "300px"; // Ajusta según necesites
     document.body.appendChild(agujero);
     setTimeout(() => {
       agujero.remove();
