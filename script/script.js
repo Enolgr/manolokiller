@@ -6,11 +6,18 @@ let gameOverModal = document.getElementById("gameOverModal");
 let finalScore = document.getElementById("finalScore");
 let restartButton = document.getElementById("restartButton");
 
-// Nuevos elementos para el modal de inicio
+// Elementos para el modal de inicio
 let firstTimeModal = document.getElementById("firstTimeModal");
 let startGameButton = document.getElementById("startGameButton");
 
-// Velocidades iniciales (aleatorias; si deseas fijas, asigna valores constantes)
+// Crea el objeto de audio para la pista de fondo (BSO)
+let bso = new Audio("sounds/bso.mp3");
+bso.loop = true;             // Reproduce en loop sin pausas
+bso.preload = "auto";        // Fuerza la precarga del audio
+bso.volume = 0.5;            // Se reproduce a la mitad del volumen original
+bso.load();                  // Inicia la carga del audio
+
+// Velocidades iniciales (aleatorias)
 let speedX = 3 + Math.random() * 5;
 let speedY = 3 + Math.random() * 5;
 
@@ -27,7 +34,7 @@ manolo.style.position = "absolute";
 
 // Función para mover a Manolo dentro del contenedor "mapa"
 function moveManolo() {
-  if (isGameOver) return; // Se detiene el movimiento si el juego terminó
+  if (isGameOver) return;
 
   posX += speedX;
   posY += speedY;
@@ -57,105 +64,79 @@ function moveManolo() {
   animationFrame = requestAnimationFrame(moveManolo);
 }
 
-// NOTA: No llamamos a moveManolo() inmediatamente; se llamará cuando se presione "Empezar Juego".
+// NOTA: moveManolo() se invoca al iniciar el juego
 
-// Manejador global de clics en el documento
 document.addEventListener("click", function (event) {
-  // No procesar clics si el juego ya terminó o si el clic fue en alguno de los modales
   if (isGameOver) return;
   if (event.target.closest("#gameOverModal") || event.target.closest("#firstTimeModal")) return;
 
-  // Cada clic gasta una bala (sin importar si se golpea a Manolo o no)
+  // Cada clic consume una bala (se reproduce el sonido de disparo)
   if (balasRestantes > 0) {
-    // Reproducir sonido de disparo sin cortar el anterior (se crea un nuevo objeto de Audio)
-    new Audio('sounds/shot.mp3').play();
-
+    new Audio("sounds/shot.mp3").play();
     balasRestantes--;
     let firstBullet = balasContainer.querySelector("img");
     if (firstBullet) firstBullet.remove();
   }
 
-  // Si el clic se realizó sobre Manolo → ¡Golpe exitoso!
+  // Si se hace clic sobre Manolo, se considera un golpe exitoso
   if (event.target.id === "manolo") {
-    // Reproducir sonido de golpe
-    new Audio('sounds/hit.mp3').play();
-
+    new Audio("sounds/hit.mp3").play();
     count++;
     contador.textContent = count;
-
-    // Aumenta la velocidad de Manolo en un 10%
     speedX *= 1.1;
     speedY *= 1.1;
-
-    // Efecto de pantalla invertida (negativo) por 50ms
-    document.body.style.filter = "none"; // Reinicia el filtro
-    void document.body.offsetWidth; // Fuerza reflow
     document.body.style.filter = "invert(1)";
     setTimeout(() => {
       document.body.style.filter = "none";
     }, 50);
   } else {
-    // Si se falla (clic fuera de Manolo), se muestra la imagen "agujero" en la posición del clic
+    // Si se falla, se muestra la imagen de "agujero"
     let agujero = document.createElement("img");
     agujero.src = "./img/agujero.png";
     agujero.style.position = "absolute";
     agujero.style.left = event.clientX + "px";
     agujero.style.top = event.clientY + "px";
     agujero.style.transform = "translate(-50%, -50%)";
-    agujero.style.width = "300px"; // Ajusta según necesites
+    agujero.style.width = "300px";
     document.body.appendChild(agujero);
     setTimeout(() => {
       agujero.remove();
     }, 1000);
   }
 
-  // Si se han gastado todas las balas, finaliza el juego
+  // Finaliza el juego si se han consumido todas las balas
   if (balasRestantes === 0) {
     endGame();
   }
 });
 
-// Función para finalizar el juego
 function endGame() {
-  isGameOver = true; // Detiene el movimiento de Manolo
+  isGameOver = true;
   cancelAnimationFrame(animationFrame);
   finalScore.textContent = count;
   gameOverModal.style.display = "flex";
-  
-  // Reproducir sonido de finalización (muerte final)
-  new Audio('sounds/muerte_final.mp3').play();
 }
 
-// Evento para reiniciar el juego
 restartButton.addEventListener("click", function () {
-  // Reiniciar las variables del juego
   count = 0;
   balasRestantes = 12;
   isGameOver = false;
   contador.textContent = count;
-
-  // Restaurar las 12 balas en el HTML
   let bulletsHTML = "";
   for (let i = 0; i < 12; i++) {
     bulletsHTML += `<img src="./img/bala.png" alt="Bala" />`;
   }
   balasContainer.innerHTML = bulletsHTML;
   gameOverModal.style.display = "none";
-
-  // Reiniciar posición y velocidad de Manolo
   posX = Math.random() * (mapa.clientWidth - manolo.clientWidth);
   posY = Math.random() * (mapa.clientHeight - manolo.clientHeight);
   speedX = 3 + Math.random() * 5;
   speedY = 3 + Math.random() * 5;
-
   moveManolo();
 });
 
-// Evento para empezar el juego (solo la primera vez)
 startGameButton.addEventListener("click", function () {
-  // Reproducir sonido de recarga al empezar el juego
-  new Audio('sounds/recarga.mp3').play();
-  
   firstTimeModal.style.display = "none";
+  bso.play(); // Inicia la reproducción continua de la BSO inmediatamente
   moveManolo();
 });

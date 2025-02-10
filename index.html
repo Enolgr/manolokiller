@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://api.fontshare.com/v2/css?f[]=tanker@400&display=swap" rel="stylesheet">
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=tanker@400&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./styles/style.css" />
     <title>Juego Manolo</title>
   </head>
@@ -36,7 +39,7 @@
       <!-- Modal de inicio (visible la primera vez) -->
       <div id="firstTimeModal" class="modal" style="display: flex;">
         <div class="modal-content">
-          <h2>Mata a Manolo</h2>
+          <h2>Mata a Manolo, por carechimba</h2>
           <button id="startGameButton">¡A por él!</button>
         </div>
       </div>
@@ -50,6 +53,19 @@
         </div>
       </div>
     </main>
+
+    <!-- Div para el cursor personalizado -->
+    <div id="customCursor"></div>
+
+    <!-- Se incluye el script del juego -->
     <script src="./script/script.js"></script>
+    <!-- Código para que el div siga al mouse -->
+    <script>
+      document.addEventListener("mousemove", function (e) {
+        const customCursor = document.getElementById("customCursor");
+        customCursor.style.left = e.clientX + "px";
+        customCursor.style.top = e.clientY + "px";
+      });
+    </script>
   </body>
 </html>
